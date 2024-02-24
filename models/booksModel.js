@@ -1,7 +1,4 @@
-// const { Schema, default: mongoose } = require('mongoose')
-import mongoose from "mongoose"
-const {Schema} = mongoose;
-
+const { Schema, model } = require('mongoose')
 const booksSchema = new Schema({
     name: {
         type: String,
@@ -40,7 +37,5 @@ const booksSchema = new Schema({
     }
 })
 
-const Books = mongoose.model('Books',booksSchema);
-export default Books;
-export {mongoose};
-// module.exports = Books
+const Books = model('Books',booksSchema);
+module.exports = Books
