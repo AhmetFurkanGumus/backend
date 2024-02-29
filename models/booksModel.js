@@ -10,7 +10,7 @@ const booksSchema = new Schema({
         min : 0,
     },
     category:{
-        type:String,
+        type:Number,
         required:true
     },
     publisher:{
@@ -35,6 +35,7 @@ const booksSchema = new Schema({
         type:String,
         
     }
+    
 })
 
 const Books = model('Books',booksSchema);

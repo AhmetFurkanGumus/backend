@@ -1,70 +1,42 @@
+//Require
 const express = require('express')
 const mongoose = require('mongoose')
-const Books = require('./models/booksModel.js')
 const cors = require('cors')
-const {PORT, mongoDBURL} = require('./config.js')
-
+const { PORT, mongoDBURL } = require('./config.js')
+const app = express();
 
 //MONGODB CONNECTION
-mongoose
-    .connect(mongoDBURL)
-    .then(() => {
-        console.log('App connected to database')
-        app.listen(PORT, () => {
-            console.log(`App is listening to port: ${PORT}`)
-        });
-    })
+mongoose.connect(mongoDBURL).then(() => {
+    console.log('App connected to database')
+    app.listen(PORT, () => {
+        console.log(`App is listening to port: ${PORT}`)
+    });
+})
     .catch((error) => {
         console.log(error);
     })
 
-const app = express();
-app.use(express.json())
+//Models
+const Books = require('./models/booksModel.js')
+const Category=require('./models/categoryModel')
+
+//CORS
 app.use(cors())
 
-app.get('/', (req, res) => {
-    console.log(req)
-    return res.status(234).send('Selam Birader')
-});
+//Router
+const BooksRouter = require('./router/booksRouter')
+const categoryRouter=require('./router/categoryRouter')
 
-app.get('/books', async function (req, res) {
-    try {
-        const books = await Books.find({})
-        res.status(200).json(books)
-    } catch (error) {
-        res.status(500).json({ message: error.message })
-    }
 
-});
+app.use(express.json())
 
-app.post('/addbooks', async (req, res) => {
-    try {
-        const books = await Books.create(req.body)
-        res.status(200).json('book is created')
-    } catch (error) {
-        res.status(500).json({ message: error.message })
+//Books
+app.use('/books', BooksRouter)
 
-    }
-})
+//Category
+app.use('/category',categoryRouter)
 
-//findbyid
-app.get('/books/:id', async (req, res) => {
-    try {
-        const { id } = req.params
-        const books = await Books.findById(id)
-        res.status(200).json(books)
-    } catch (error) {
-        res.status(500).json({ message: error.message })
-    }
-})
 
-app.put('/books/:id', async (req,res)=>{
-    try {
-        const {id} = req.params
-        await Books.findByIdAndUpdate(id,req.body)
-        const books = await Books.findById(id)
-        res.status(200).json(books)
-    } catch (error) {
-        res.status(500).json({ message: error.message })
-    }
-})
+
+
+
