@@ -68,9 +68,22 @@ booksRouter.route('/:id').delete (async (req, res) => {
 booksRouter.route('/getBooksByCategory/:categoryID').get(async (req, res) => {
     try {
         const { categoryID } = req.params;
-        const books = await Books.find({ category: categoryID });
+        console.log('Requested categoryID:', categoryID);
+
+        // Kategori ID var mı diye kontrol et
+        const existingCategory = await Category.findOne({ categoryID });
+        if (!existingCategory) {
+            console.log('Invalid categoryID');
+            return res.status(400).json({ message: 'Invalid categoryID' });
+        }
+
+        // Kategorideki kitapları bul
+        const books = await Books.find({ categoryID });
+        console.log('Found books:', books);
+
         res.status(200).json(books);
     } catch (error) {
+        console.error('Error fetching books by category:', error);
         res.status(500).json({ message: error.message });
     }
 });
