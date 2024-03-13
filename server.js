@@ -20,12 +20,20 @@ mongoose.connect(mongoDBURL).then(() => {
 const Books = require('./models/booksModel.js')
 const Category=require('./models/categoryModel')
 
+
 //CORS
 app.use(cors())
 
 //Router
 const BooksRouter = require('./router/booksRouter')
 const categoryRouter=require('./router/categoryRouter')
+const userRouter=require('./router/userRouter')
+const cartRouter = require('./router/cartRouter')
+//ENV
+require('dotenv').config()
+
+//MIDDLE WARE
+const authMiddleWare = require('./middleware/auth')
 
 
 app.use(express.json())
@@ -36,7 +44,13 @@ app.use('/books', BooksRouter)
 //Category
 app.use('/category',categoryRouter)
 
+//User
+app.use('/auth',userRouter)
+
+//Cart
+app.use('/cart',cartRouter)
 
 
-
+//Middleware
+app.use(authMiddleWare)
 

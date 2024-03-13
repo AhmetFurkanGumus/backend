@@ -28,6 +28,7 @@ const booksSchema = new Schema({
     },
     img: {
         type: String,
+        required:true
     },
     author: {
         type: String,
